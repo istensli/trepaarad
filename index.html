@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tre på rad</title>
+
+    <style>
+        
+        div {
+            user-select: none;
+        }
+
+        div.square {
+            color: blue;
+            background-color: azure;
+            padding: 10px;
+            margin: 10px;
+            border: solid cornflowerblue 5px;
+            width: 20px;
+            height: 20px;
+            float: left;
+        }
+
+         div.førstPåLinja {
+            clear: left;
+        }
+
+
+    </style>
+</head>
+<body>
+    <div id="app"></div>
+
+    <script>
+
+            //model
+            let board = ['', '', '', '', '', '', '', '', ''];
+
+            let winner = '';
+
+
+            showBoard();
+
+            function setX(index){
+                if(board[index] == ''){
+                    board[index] = 'X';
+                }
+                checkWinning();
+
+                setRandomO();
+                checkWinning();
+
+                showBoard();
+
+            }
+
+            function setRandomO(){
+                let emptySquares = Array.from(board.keys()).filter(i=>board[i]==='');
+                console.log(emptySquares);
+
+                let randomIndex = getRandomNumber(0, (emptySquares.length - 1));
+                let randomEmptyIndex = emptySquares[randomIndex];
+                board[randomEmptyIndex] = 'O';
+
+            }
+
+
+            function checkWinning(){
+
+                if(checkAllPossibilitiesForLetter('X')){
+                    winner = 'X';
+                    console.log("Winner: " + winner);
+                }
+                else if(checkAllPossibilitiesForLetter('O')){
+                    winner = 'O';
+                    console.log("Winner: " + winner);
+                }
+                
+
+
+
+
+
+            }
+
+            function checkOnePossibility(letter, index1, index2, index3){
+                if(letter != 'X' && letter != 'O'){
+                    console.log("Error in using function checkOnePossibility()");
+                    return;
+                }    
+                const hasWon = (board[index1] == letter) &&
+                (board[index2] == letter) && (board[index3] == letter);
+                return hasWon;
+
+            }
+
+            function checkAllPossibilitiesForLetter(letter){
+                if(letter != 'X' && letter != 'O'){
+                    console.log("Error in using function checkAllPossibilitiesForLetter()");
+                    return;
+                }
+
+                const hasWon = checkOnePossibility(letter, 0, 1, 2)
+                                || checkOnePossibility(letter, 3, 4, 5)
+                                || checkOnePossibility(letter, 6, 7, 8)
+                                || checkOnePossibility(letter, 0, 3, 6)
+                                || checkOnePossibility(letter, 1, 4, 7)
+                                || checkOnePossibility(letter, 2, 5, 8)
+                                || checkOnePossibility(letter, 0, 4, 8)
+                                || checkOnePossibility(letter, 2, 4, 6);
+                return hasWon;                
+
+            }
+
+
+
+
+            function getRandomNumber(min, max){
+                return min + Math.floor(Math.random() * (max - min + 1));
+            }
+
+
+
+
+
+            //View
+            function showBoard(){
+
+                let html = /*HTML*/`<div class="square" onclick="setX(0)">${board[0]}</div>
+                    <div class="square" onclick="setX(1)">${board[1]}</div>
+                    <div class="square" onclick="setX(2)">${board[2]}</div>
+                    <div class="førstPåLinja square" onclick="setX(3)">${board[3]}</div>
+                    <div class="square" onclick="setX(4)">${board[4]}</div>
+                    <div class="square" onclick="setX(5)">${board[5]}</div>
+                    <div class="førstPåLinja square" onclick="setX(6)">${board[6]}</div>
+                    <div class="square" onclick="setX(7)">${board[7]}</div>
+                    <div class="square" onclick="setX(8)">${board[8]}</div>
+                    `;
+
+                if(winner == 'X') html += /*HTML*/`<div>Du vant!</div>`; 
+                else if(winner == 'O') html += /*HTML*/`<div>Computeren vant!</div>`; 
+
+                document.getElementById('app').innerHTML = html;
+
+
+            }
+
+
+
+    </script>
+    
+</body>
+</html>
