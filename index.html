@@ -40,10 +40,24 @@
 
             let winner = '';
 
+            let isFinished = false;
+
 
             showBoard();
 
+            //Controller
+
+            function resetGame(){
+                //
+                board = ['','','', '','','', '','','' ];
+                winner = '';
+                isFinished = false;
+
+                showBoard();
+            }
+
             function setX(index){
+                if(isFinished) return;
                 if(board[index] == ''){
                     board[index] = 'X';
                 }
@@ -72,10 +86,13 @@
                 if(checkAllPossibilitiesForLetter('X')){
                     winner = 'X';
                     console.log("Winner: " + winner);
+                    isFinished = true;
+
                 }
                 else if(checkAllPossibilitiesForLetter('O')){
                     winner = 'O';
                     console.log("Winner: " + winner);
+                    isFinished = true;
                 }
                 
 
@@ -138,6 +155,8 @@
                     <div class="square" onclick="setX(7)">${board[7]}</div>
                     <div class="square" onclick="setX(8)">${board[8]}</div>
                     `;
+
+                    html +=  /*HTML*/`<button onclick="resetGame()">Reset game</button>`;
 
                 if(winner == 'X') html += /*HTML*/`<div>Du vant!</div>`; 
                 else if(winner == 'O') html += /*HTML*/`<div>Computeren vant!</div>`; 
